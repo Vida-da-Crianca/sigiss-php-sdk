@@ -1,0 +1,17 @@
+{
+    "name": "carlosocarvalho/sigis-php-sdk",
+    "authors": [
+        {
+            "name": "Carlos O Carvalho",
+            "email": "contato@carlosocarvalho.com.br"
+        }
+    ],
+    "require": {
+        "symfony/var-dumper": "^5.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "CarlosOCarvalho\\Sigiss\\":"src/"
+        }
+    }
+}
