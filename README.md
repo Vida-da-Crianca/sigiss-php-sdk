@@ -1,4 +1,4 @@
-<h3>SIG-ISS PHP SDK</h3>
+<h3>SIG-ISS PHP SDK  FOR NOTA FISCAL DE SERVIÇO</h3>
 
 
 
@@ -14,28 +14,28 @@ use CarlosOCarvalho\Sigiss\SigissService;
 
 
 $config = new Barretos([
-    'name' => 'ESCOLA DE ED. INF E ENSINO FUND.VIDA DE CRIANÇA LTDA',
+    'name' => 'Razao Social',
     'description' => '',
     'phone' => '(17) 3322-3777',
-    'ccm' => '15556',
-    'document' => '05460684000128',
-    'password' => '1234',
-    'crc' => '1555603020201005',
+    'ccm' => '15556',//ccm 
+    'document' => '******', //cnpj
+    'password' => '****', // password
+    'crc' => '******', // contador crc
     'crc_state' => 'SP', 
     'url' => 'https://barretos.sigiss.com.br/barretos/ws/sigiss_ws.php?wsdl',
-    'simple_rate' => '2,8900%',
+    'simple_rate' => '2,8900%',// calculo aliquota
     'code_service' => 801, // codigo do servico
     'condition' =>  'T', // situacao
 
 
 ]);
-$provider = new Provider($config);
+$provider = new Provider($config); /// provider use in SigIssService
 
 ```
 
 
 
-<strong>Search NFS </strong>
+<strong>Search NFS (Pesquisando Nota Valida) </strong>
 
 
 ```php
@@ -47,33 +47,13 @@ use CarlosOCarvalho\Sigiss\SigissService;
 
 
 
-$config = new Barretos([
-    'name' => 'ESCOLA DE ED. INF E ENSINO FUND.VIDA DE CRIANÇA LTDA',
-    'description' => '',
-    'phone' => '(17) 3322-3777',
-    'ccm' => '15556',
-    'document' => '05460684000128',
-    'password' => '1234',
-    'crc' => '1555603020201005',
-    'crc_state' => 'SP', 
-    'url' => 'https://barretos.sigiss.com.br/barretos/ws/sigiss_ws.php?wsdl',
-    'simple_rate' => '2,8900%',
-    'code_service' => 801, // codigo do servico
-    'condition' =>  'T', // situacao
-
-
-]);
-$provider = new Provider($config);
 
 $service  =  new SigissService($provider);
 $service->search('3271', 'KQZL-SBO2', '474,00');
 
 ```
 
-
-
 <strong>Create NFS </strong>
-
 
 ```php
 
@@ -91,7 +71,7 @@ $data  = [
     'base'  => '10,6',
     'descricaoNF' => 'Apenas uma descricao de uma nota teste',
     'tomador_tipo' => 2,
-    'tomador_cnpj' => '35918428003',
+    'tomador_cnpj' => '*****', //cnoj da empresa
     'tomador_email' => 'contato@carlosorvalho.com.br',
     'tomador_razao' => 'Jose Maria dos Santos',
     'tomador_endereco' => 'Avenida Maria Trindade',
@@ -106,6 +86,39 @@ $data  = [
 
     
 ];
-$service->create($data);
+try{
+$response = $service->create($data);
+  dump($response);
+}catch(\Exception $e){
+    dump($e->getMessage());
+}
+
+```
+
+
+
+<strong>Cancel NFS </strong>
+
+
+```php
+
+
+use CarlosOCarvalho\Sigiss\Drivers\Barretos;
+use CarlosOCarvalho\Sigiss\Provider;
+use CarlosOCarvalho\Sigiss\SigissService;
+
+
+$data = [
+    'nota'=> 3338,
+    'email' => 'example@gmail.com',
+    'motivo' => 'Nota de teste para criacao do SDK'
+    
+];
+try{
+    $response = $service->params($data)->cancel();
+    dump($response);
+}catch(\Exception $e){
+    dump($e->getMessage());
+}
 
 ```

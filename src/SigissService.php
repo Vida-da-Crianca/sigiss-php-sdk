@@ -5,6 +5,7 @@ namespace CarlosOCarvalho\Sigiss;
 use CarlosOCarvalho\Sigiss\Contracts\ProviderContract;
 use CarlosOCarvalho\Sigiss\Exceptions\SearchException;
 use CarlosOCarvalho\Sigiss\Traits\CreateTrait;
+use CarlosOCarvalho\Sigiss\Traits\DeleteTrait;
 use CarlosOCarvalho\Sigiss\Traits\SearchTrait;
 use SoapClient;
 
@@ -14,7 +15,7 @@ use SoapClient;
 class SigissService
 {
 
-    use SearchTrait, CreateTrait;
+    use SearchTrait, CreateTrait, DeleteTrait;
     /**
      * Undocumented variable
      *
@@ -30,6 +31,13 @@ class SigissService
      * @var SoapClient
      */
     private $client;
+
+    /**
+     * Undocumented function
+     *
+     * @param Array $params
+     */
+    private $params = [];
 
     public function __construct(ProviderContract $provider)
     {
@@ -118,54 +126,38 @@ class SigissService
         // }
     }
 
-
-    public function search($id, $authenticity, $price)
+    public function params($params = [])
     {
-        try {
+        $this->params = $params;
+        return $this;
+    }
 
 
-            $this->id = $id;
-            $this->authenticity =  $authenticity;
-            $this->serie = 1;
-            $this->price = $price;
+    public function search()
+    {
 
-            $response = (object) $this->getClientSoap()->__soapCall($this->getCallSearchName(), $this->makeSearch());
 
-            if ($response->RetornoNota->Resultado == 0) {
-                foreach ($response->DescricaoErros as $e) {
-                       throw new SearchException(sprintf('Nota(%s) - %s', $e->id, strip_tags($e->DescricaoErro)));
-                }
+        $response = (object) $this->getClientSoap()->__soapCall($this->getCallSearchName(), $this->makeSearch($this->params));
+        if ($response->RetornoNota->Resultado == 0) {
+            foreach ($response->DescricaoErros as $e) {
+                throw new SearchException(sprintf('Nota(%s) - %s', $e->id, strip_tags($e->DescricaoErro)));
             }
-
-            dump($response);
-        } catch (\CarlosOCarvalho\Sigiss\Exceptions\SearchException $e) {
-
-            dump($e->getMessage());
         }
     }
 
 
-    public function create($data){
-          
-        try {
+    public function create()
+    {
 
+        $options = $this->makeCreate($this->params);
+        return (object) $this->getClientSoap()->__soapCall($this->getCallCreateName(), $options);
+    }
 
-             
+    public function cancel()
+    {
 
-            // $options = $this->makeCreate($data);
-
-           
-
-            $response = (object) $this->getClientSoap()->__soapCall($this->getCallCreateName(), $this->makeCreate($data));
-
-           
-
-            dump($response);
-        } catch (\Exception $e) {
-
-            dump($e->getMessage());
-        }
-
+        $options = $this->makeDelete($this->params);
+        return (object) $this->getClientSoap()->__soapCall($this->getCallDeleteName(), $options);
     }
 
 

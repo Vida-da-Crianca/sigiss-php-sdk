@@ -6,7 +6,7 @@ use CarlosOCarvalho\Sigiss\SigissService;
 
 require_once(__DIR__.'/vendor/autoload.php');
 
-
+try{
 
 $config = new Barretos([
     'name' => 'ESCOLA DE ED. INF E ENSINO FUND.VIDA DE CRIANÇA LTDA',
@@ -15,7 +15,7 @@ $config = new Barretos([
     'ccm' => '15556',
     'document' => '05460684000128',
     'password' => '1234',
-    'crc' => '1555603020201005',
+    'crc' => '096280',
     'crc_state' => 'SP', 
     'url' => 'https://barretos.sigiss.com.br/barretos/ws/sigiss_ws.php?wsdl',
     'simple_rate' => '2,8900%',
@@ -29,7 +29,7 @@ $provider = new Provider($config);
 dump($provider->getURL());
 $service  =  new SigissService($provider);
 
-//$service->search('3271', 'KQZL-SBO2', '474,00');
+// $service->search('3271', 'KQZL-SBO2', '474,00');
 
 $data  = [
     'valor' => '10,6',
@@ -43,14 +43,37 @@ $data  = [
     'tomador_numero' => '2367',
     'tomador_bairro' => 'Paulista Nova',
     'tomador_CEP' => '08343320',
-    'tomador_cod_cidade' => 'Barretos',
-    'rps_num' => '2543122',
-    'id_sis_legado' => '2543122',
+    'tomador_cod_cidade' => '3505500',
+    'rps_num' => '',
+    'id_sis_legado' => '',
     'rps_serie' => 1,
     'serie' => 1
 
     
 ];
-$service->create($data);
+
+$response = $service->params($data)->create();
 //SigissService::addProvider($provider);
 //SigissService::search( '');
+
+
+
+
+// $provider = new Provider($config);
+// $service  =  new SigissService($provider);
+
+//3338
+// $data = [
+//     'nota'=> 3338,
+//     'email' => 'carlosocarvalho.com.br@gmail.com',
+//     'motivo' => 'Nota de teste para criacao do SDK'
+    
+// ];
+
+    // $response = $service->params($data)->cancel();
+    dump($response);
+}catch(\Exception $e){
+    $response = $service->getClientSoap()->__getLastResponse();
+    dump($response);
+    dump($e->getMessage());
+}
