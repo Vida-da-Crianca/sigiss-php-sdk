@@ -8,12 +8,15 @@
         }
     ],
     "require": {
-        "symfony/var-dumper": "^5.1",
+        
         "respect/validation": "^2.1"
     },
     "autoload": {
         "psr-4": {
             "CarlosOCarvalho\\Sigiss\\":"src/"
         }
+    },
+    "autoload-dev": {
+        "symfony/var-dumper": "^5.1"
     }
 }
