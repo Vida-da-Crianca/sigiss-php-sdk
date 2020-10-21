@@ -1,6 +1,6 @@
 {
     "name": "carlosocarvalho/sigiss-php-sdk",
-    "license": "GPL",
+    "license": "MIT",
     "authors": [
         {
             "name": "Carlos O Carvalho",
