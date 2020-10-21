@@ -52,7 +52,7 @@ $data  = [
     
 ];
 
-$response = $service->params($data)->create();
+//$response = $service->params($data)->create();
 //SigissService::addProvider($provider);
 //SigissService::search( '');
 
@@ -63,14 +63,14 @@ $response = $service->params($data)->create();
 // $service  =  new SigissService($provider);
 
 //3338
-// $data = [
-//     'nota'=> 3338,
-//     'email' => 'carlosocarvalho.com.br@gmail.com',
-//     'motivo' => 'Nota de teste para criacao do SDK'
+$data = [
+    'nota'=> 3339,
+    'email' => 'carlosocarvalho.com.br@gmail.com',
+    'motivo' => 'Nota de teste para criacao do SDK'
     
-// ];
+];
 
-    // $response = $service->params($data)->cancel();
+    $response = $service->params($data)->cancel();
     dump($response);
 }catch(\Exception $e){
     $response = $service->getClientSoap()->__getLastResponse();
