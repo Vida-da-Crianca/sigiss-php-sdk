@@ -9,7 +9,7 @@ trait SearchTrait
 {
 
 
-    public function makeSearch($data = [])
+    public function makeSearch()
     {
         // dump($this->getProvider()->getCCM());
         $rules = [
@@ -27,22 +27,25 @@ trait SearchTrait
             ]
         ];
 
-        (new FieldsValidator)->rules($rules)->validate($data);
-        
-        return [
-            'tcDadosConsultaNota' => array_merge([
-                // 'nota' => $this->id,
-                // 'serie' => $this->serie,
-                // 'autenticidade' => $auth ,
-                // 'valor' =>  $this->price,
+        $this->params = array_merge(
+            $this->params,
+            [
                 'prestador_ccm' => $this->getProvider()->getCCM(),
                 'prestador_cnpj' => $this->getProvider()->getDocument(),
-            ], $data)
-        ];
+            ]
+        );
+
+        (new FieldsValidator)->rules($rules)->validate($this->params);
+        return $this;
     }
 
     public function getCallSearchName()
     {
         return 'ConsultarNotaValida';
+    }
+
+    public function getIndexSearchName()
+    {
+        return 'tcDadosConsultaNota';
     }
 }

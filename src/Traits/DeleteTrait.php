@@ -3,14 +3,14 @@
 
 namespace CarlosOCarvalho\Sigiss\Traits;
 
-
+use CarlosOCarvalho\Sigiss\SigissService;
 use CarlosOCarvalho\Sigiss\Validators\FieldsValidator;
 
 trait DeleteTrait
 {
 
 
-    public function makeDelete($data)
+    public function makeDelete() : SigissService
     {
 
         $rules = [
@@ -25,22 +25,26 @@ trait DeleteTrait
             ]
         ];
 
-        (new FieldsValidator)->rules($rules)->validate($data);
 
+        $this->params = array_merge($this->params,
+            [
+            'ccm' => $this->getProvider()->getCCM(),
+            'cnpj' => $this->getProvider()->getDocument(),
+            'senha' => $this->getProvider()->getPWD(),
+            ]
+        );
 
+        (new FieldsValidator)->rules($rules)->validate( $this->params);
 
-
-        return [
-            'tcDadosCancelaNota' => array_merge([
-                'ccm' => $this->getProvider()->getCCM(),
-                'cnpj' => $this->getProvider()->getDocument(),
-                'senha' => $this->getProvider()->getPWD(),
-            ], $data)
-        ];
+        return $this;
     }
 
     public function getCallDeleteName()
     {
         return 'CancelarNota';
+    }
+
+    public function getKeyIndexDeleteName(){
+        return 'tcDadosCancelaNota';
     }
 }

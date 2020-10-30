@@ -9,10 +9,10 @@ trait CreateTrait
 {
 
 
-    public function makeCreate($data)
+    public function makeCreate()
     {
 
-        $params = array_merge([
+        $this->params = array_merge([
             'ccm' => $this->getProvider()->getCCM(),
             'cnpj' => $this->getProvider()->getDocument(),
             'senha' => $this->getProvider()->getPWD(),
@@ -46,19 +46,24 @@ trait CreateTrait
             'inss' => '',
             'irrf' => '',
             'csll' => ''
-        ], $data);
+        ], $this->params);
 
 
-        (new FieldsValidator)->rules($this->getRulesCreate())->validate($params);
-
-        return [
-            'tcDescricaoRps' => $params
-        ];
+        (new FieldsValidator)->rules($this->getRulesCreate())->validate($this->params);
+        
+        return $this;
+        // return [
+        //     'tcDescricaoRps' => $params
+        // ];
     }
 
     public function getCallCreateName()
     {
         return 'GerarNota';
+    }
+    public function getIndexCreateName()
+    {
+        return 'tcDescricaoRps';
     }
 
 

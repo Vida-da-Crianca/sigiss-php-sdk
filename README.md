@@ -49,7 +49,8 @@ use CarlosOCarvalho\Sigiss\SigissService;
 
 
 $service  =  new SigissService($provider);
-$service->search('3271', 'KQZL-SBO2', '474,00');
+$service->params(['nota' =>  '3342', 'serie' => 1, 'autenticidade' => 'WFTS0BT8', 'valor' => '10,60'])->search();
+$service->fire();
 
 ```
 
@@ -87,7 +88,9 @@ $data  = [
     
 ];
 try{
-$response = $service->create($data);
+  
+  $service->params($data)->create();
+  $response = $service->fire();
   dump($response);
 }catch(\Exception $e){
     dump($e->getMessage());
@@ -115,8 +118,8 @@ $data = [
     
 ];
 try{
-    $response = $service->params($data)->cancel();
-    dump($response);
+    $service->params($data)->cancel();
+   $response = $service->fire();
 }catch(\Exception $e){
     dump($e->getMessage());
 }

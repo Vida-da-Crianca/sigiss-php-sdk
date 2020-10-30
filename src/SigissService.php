@@ -7,6 +7,7 @@ use CarlosOCarvalho\Sigiss\Exceptions\SearchException;
 use CarlosOCarvalho\Sigiss\Traits\CreateTrait;
 use CarlosOCarvalho\Sigiss\Traits\DeleteTrait;
 use CarlosOCarvalho\Sigiss\Traits\SearchTrait;
+use Exception;
 use SoapClient;
 use stdClass;
 
@@ -32,6 +33,11 @@ class SigissService
      * @var SoapClient
      */
     private $client;
+
+
+    public $keyIndexName = null;
+
+    public $callFuncName;
 
     /**
      * Undocumented function
@@ -126,22 +132,33 @@ class SigissService
         //     // $response = simplexml_load_string($response);
         // }
     }
-    
-      
-      
+
+
+
     /**
      * params
      *
      * @param  mixed $params
      * @return SigissService
      */
-    public function params($params = []): SigissService
+    public function params(array $params = []): SigissService
     {
         $this->params = $params;
         return $this;
     }
+       
+    /**
+     * fire
+     *
+     * @return stdClass
+     */
+    public function fire(): stdClass
+    {
+        if (!$this->callFuncName or !$this->keyIndexName)
+            throw new Exception("CallFunc or KeyName not defined");
+        return     (object) $this->getClientSoap()->__soapCall($this->callFuncName, [$this->keyIndexName => $this->getBody()]);
+    }
 
-    
     /**
      * search
      *
@@ -149,43 +166,52 @@ class SigissService
      */
     public function search()
     {
-        $response = (object) $this->getClientSoap()->__soapCall($this->getCallSearchName(), $this->makeSearch($this->params));
-        if ($response->RetornoNota->Resultado == 0) {
-            foreach ($response->DescricaoErros as $e) {
-                throw new SearchException(sprintf('Nota(%s) - %s', $e->id, strip_tags($e->DescricaoErro)));
-            }
-        }
+        $this->makeSearch();
+        $this->keyIndexName = $this->getIndexSearchName();
+        $this->callFuncName = $this->getCallSearchName();
+
+        return $this;
     }
 
-     
+
     /**
      * create
      *
      * @return stdClass
      */
-    public function create(): stdClass
+    public function create(): SigissService
     {
 
-        $options = $this->makeCreate($this->params);
-        return (object) $this->getClientSoap()->__soapCall($this->getCallCreateName(), $options);
-    }
-    
+        $this->makeCreate();
+        $this->keyIndexName = $this->getIndexCreateName();
+        $this->callFuncName = $this->getCallCreateName();
 
-    
-    
+        return $this;
+    }
+
+
+
+
     /**
      * cancel
      *
      * @return stdClass
      */
-    public function cancel(): ?stdClass    {
+    public function cancel(): SigissService
+    {
 
-        $options = $this->makeDelete($this->params);
-       return (object) $this->getClientSoap()->__soapCall($this->getCallDeleteName(), $options);
+        $this->makeDelete();
+        $this->keyIndexName = $this->getKeyIndexDeleteName();
+        $this->callFuncName = $this->getCallDeleteName();
+
+        return $this;
     }
 
 
-    
+
+
+
+
     /**
      * initialize
      *
@@ -207,5 +233,11 @@ class SigissService
             'stream_context' => stream_context_create($arrContextOptions)
         );
         $this->client = new SoapClient($url, $options);
+    }
+
+
+    public function getBody()
+    {
+        return $this->params;
     }
 }
