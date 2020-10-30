@@ -8,7 +8,7 @@
         }
     ],
     "require": {
-        
+        "php":">=7.2",
         "respect/validation": "^2.1"
     },
     "autoload": {
@@ -16,7 +16,7 @@
             "CarlosOCarvalho\\Sigiss\\":"src/"
         }
     },
-    "autoload-dev": {
+    "require-dev": {
         "symfony/var-dumper": "^5.1"
     }
 }

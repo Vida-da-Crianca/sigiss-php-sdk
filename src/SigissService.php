@@ -8,6 +8,7 @@ use CarlosOCarvalho\Sigiss\Traits\CreateTrait;
 use CarlosOCarvalho\Sigiss\Traits\DeleteTrait;
 use CarlosOCarvalho\Sigiss\Traits\SearchTrait;
 use SoapClient;
+use stdClass;
 
 /**
  * SigissService
@@ -125,18 +126,29 @@ class SigissService
         //     // $response = simplexml_load_string($response);
         // }
     }
-
-    public function params($params = [])
+    
+      
+      
+    /**
+     * params
+     *
+     * @param  mixed $params
+     * @return SigissService
+     */
+    public function params($params = []): SigissService
     {
         $this->params = $params;
         return $this;
     }
 
-
+    
+    /**
+     * search
+     *
+     * @return void
+     */
     public function search()
     {
-
-
         $response = (object) $this->getClientSoap()->__soapCall($this->getCallSearchName(), $this->makeSearch($this->params));
         if ($response->RetornoNota->Resultado == 0) {
             foreach ($response->DescricaoErros as $e) {
@@ -145,23 +157,40 @@ class SigissService
         }
     }
 
-
-    public function create()
+     
+    /**
+     * create
+     *
+     * @return stdClass
+     */
+    public function create(): stdClass
     {
 
         $options = $this->makeCreate($this->params);
         return (object) $this->getClientSoap()->__soapCall($this->getCallCreateName(), $options);
     }
+    
 
-    public function cancel()
-    {
+    
+    
+    /**
+     * cancel
+     *
+     * @return stdClass
+     */
+    public function cancel(): ?stdClass    {
 
         $options = $this->makeDelete($this->params);
-        return (object) $this->getClientSoap()->__soapCall($this->getCallDeleteName(), $options);
+       return (object) $this->getClientSoap()->__soapCall($this->getCallDeleteName(), $options);
     }
 
 
-
+    
+    /**
+     * initialize
+     *
+     * @return void
+     */
     private function initialize()
     {
 

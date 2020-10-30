@@ -2,25 +2,20 @@
 
 namespace CarlosOCarvalho\Sigiss;
 
-class Invoice {
-    
+class Invoice
+{
 
 
-    
-    /**
-     * Undocumented function
-     *
-     * @return void
-     */
-    public function search($id, $authenticity){
+    public function __construct($options)
+    {  
+            foreach($options as $key => $v){
+                $this->{$key} = $v;
+            }
+    }  
 
 
+    public function __get($name)
+    {
+        return $this->{$name};
     }
-
-
-    public function create($data){
-
-    }
-
-    public function cancel($id){}
-}   
+}
