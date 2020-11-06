@@ -14,7 +14,10 @@
     "autoload": {
         "psr-4": {
             "CarlosOCarvalho\\Sigiss\\":"src/"
-        }
+        },
+        "files": [
+            "src/helpers/helpers.php"
+        ]
     },
     "require-dev": {
         "symfony/var-dumper": "^5.1"
