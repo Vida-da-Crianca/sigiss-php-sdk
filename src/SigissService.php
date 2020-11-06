@@ -49,7 +49,7 @@ class SigissService
     public function __construct(ProviderContract $provider)
     {
         $this->provider =  $provider;
-        $this->initialize();
+      
     }
 
     /**
@@ -153,7 +153,7 @@ class SigissService
      * @return stdClass
      */
     public function fire(): stdClass
-    {
+    {    $this->initialize();
         if (!$this->callFuncName or !$this->keyIndexName)
             throw new Exception("CallFunc or KeyName not defined");
         return     (object) $this->getClientSoap()->__soapCall($this->callFuncName, [$this->keyIndexName => $this->getBody()]);
